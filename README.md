@@ -19,6 +19,7 @@ maven-deps — это утилита для анализа зависимост�
 
 - [Java](https://www.oracle.com/java/technologies/downloads/)
 - [PlantUML](https://github.com/plantuml/plantuml/releases/download/v1.2024.8/plantuml.jar)
+  - graphviz
 
 ## Cборка проекта
 
