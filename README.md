@@ -60,4 +60,4 @@ cmake --build . --config Release
 ```bash
 ctest
 ```
-![img](screenshots/test.png)
+![test](screenshots/test.png)
