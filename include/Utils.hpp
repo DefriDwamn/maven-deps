@@ -1,6 +1,7 @@
 #pragma once
 #include <sstream>
 #include <string>
+#include <vector>
 
 class Utils {
 public:
@@ -8,6 +9,9 @@ public:
 
   template <typename... Args>
   static std::string colorize(Color color, const Args &...args);
+
+  inline static std::vector<std::string> split(const std::string &str,
+                                               char delimiter);
 
 private:
   template <typename T>
@@ -63,4 +67,14 @@ void Utils::appendToStream(std::ostringstream &oss, const T &value,
                            const Args &...args) {
   oss << value;
   appendToStream(oss, args...);
+}
+
+std::vector<std::string> Utils::split(const std::string &str, char delimiter) {
+  std::vector<std::string> result;
+  std::string token;
+  std::istringstream tokenStream(str);
+  while (std::getline(tokenStream, token, delimiter)) {
+    result.push_back(token);
+  }
+  return result;
 }

@@ -34,6 +34,7 @@ int main(int argc, char *argv[]) {
     GraphVisualizer visualizer(visualizerPath);
 
     auto dependencies = resolver.resolve(packageName, maxDepth);
+    generator.mainPackage = packageName;
     std::string plantUMLCode = generator.generate(dependencies);
     visualizer.visualize(plantUMLCode);
 

@@ -52,6 +52,14 @@ void DependencyResolver::resolveDependenciesRecursive(
   boost::property_tree::ptree tree;
   boost::property_tree::read_xml(xmlData, tree);
 
+  std::map<std::string, std::string> properties;
+  auto propsNode = tree.get_child_optional("project.properties");
+  if (propsNode) {
+    for (const auto &prop : propsNode.get()) {
+      properties[prop.first] = prop.second.data();
+    }
+  }
+
   auto depsNode = tree.get_child_optional("project.dependencies");
   if (!depsNode) {
     graph[packageName] = {};
@@ -66,12 +74,21 @@ void DependencyResolver::resolveDependenciesRecursive(
       std::string depVersion = dep.second.get<std::string>("version", "");
 
       if (depVersion.find("${") != std::string::npos) {
-        std::cerr << Utils::colorize(Utils::Color::YELLOW,
-                                     "Warning: Unresolved version placeholder "
-                                     "found in dependency: ")
-                  << depGroupId << ":" << depArtifactId << ":" << depVersion
-                  << std::endl;
-        depVersion = "latest";
+        std::string placeholder =
+            depVersion.substr(depVersion.find("${") + 2,
+                              depVersion.find("}") - depVersion.find("${") - 2);
+
+        if (properties.find(placeholder) != properties.end()) {
+          depVersion = properties[placeholder];
+        } else if (placeholder == "project.version") {
+          depVersion = version;
+        } else {
+          std::cerr << Utils::colorize(
+                           Utils::Color::YELLOW,
+                           "Warning: Placeholder not found in properties for ",
+                           placeholder, " in package ", packageName)
+                    << "\n";
+        }
       }
 
       if (!depGroupId.empty() && !depArtifactId.empty() &&
