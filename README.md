@@ -56,6 +56,10 @@ cmake --build . --config Release
 ./maven_deps -p org.json:json:20230227 -v ../for_test/plantuml.jar
 ```
 
+[graph.puml](example/graph.puml)
+![img](example/graph.png)
+
+
 ## Результаты тестов
 Запуск тестов происходит в директории build после сборки проекта командой:
 ```bash
